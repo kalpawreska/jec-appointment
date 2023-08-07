@@ -5,6 +5,8 @@ option go_package = "./domains/appointment";
 
 import "google/protobuf/timestamp.proto";
 
+// #region Appointment Proto
+
 message Appointment {
     string healthcare_id = 1;
     string appointment_no = 2;
@@ -17,3 +19,13 @@ message Appointment {
     google.protobuf.Timestamp create_at = 9;
     int64 schedule_slot_id = 10;
 }
+
+// #endregion end of Appointment Proto
+
+// #region Message
+
+message AppointmentList {
+    repeated Appointment list = 1;
+}
+
+// #endregion end of Message
