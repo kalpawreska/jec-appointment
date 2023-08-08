@@ -1,42 +1,54 @@
+// Declares the package name
 package main
 
+//	Import library
 import (
 	"log"
-	"time"
 
-	"github.com/golang/protobuf/ptypes"
-	appointments "github.com/kalpawreska/jec-appointment/domain/appointment"
+	"github.com/gofiber/fiber/v2"
+	"github.com/kalpawreska/jec-appointment/domain/appointment"
+	customvalidator "github.com/kalpawreska/jec-appointment/pkg/jecvalidator"
 )
 
+// #region Trademark
+
+// This software, all associated documentation, and all copies are CONFIDENTIAL INFORMATION of Kalpavriksha
+// https://www.fwahyudianto.id
+// ® Wahyudianto, Fajar
+// Email 	: me@fwahyudianto.id
+
+// #endregion
+
 func main() {
-	dtAppointment := time.Now().AddDate(time.Now().Year(), int(time.Now().Month()), time.Now().Day())
-	dtDateTimeNow := time.Now()
+	app := fiber.New(
+		fiber.Config{
+			ErrorHandler: customvalidator.HttpErrorHandler,
+		},
+	)
 
-	dtAppointmentProto, errApp := ptypes.TimestampProto(dtAppointment)
-	dtNowProto, err := ptypes.TimestampProto(dtDateTimeNow)
+	appointment.RouterInit(app)
 
-	if err != nil {
-		log.Println(errApp)
-	}
-
-	if err != nil {
-		log.Println(err)
-	}
-
-	var oAppointment = appointments.AppointmentProto{
-		HealthcareId:    "002",
-		AppointmentNo:   "AP230807-00001",
-		ParamedicId:     "J0001",
-		PatientId:       "KP202309-0001",
-		AppointmentDate: dtAppointmentProto,
-		AppointmentTime: dtNowProto,
-		IsVoid:          false,
-		UserCreate:      "21239",
-		CreateAt:        dtNowProto,
-		ScheduleSlotId:  1,
-	}
-
-	var oAppointmentList = appointments.AppointmentListProto{Appointments: []*appointments.AppointmentProto{&oAppointment}}
-
-	log.Printf("data: \n%v", oAppointmentList.Appointments)
+	log.Println("Appointment Services Running at port 9091")
+	app.Listen(":9091")
 }
+
+/*
+    ? OUTPUT :
+    ? =====================================
+
+{
+    "data": {
+        "HealthcareId": "002",
+        "AppointmentNo": "AP230807-00001",
+        "ParamedicId": "J0001",
+        "PatientId": "KP202306-0001",
+        "AppointmentDate": "2023-08-08T23:35:13+07:00",
+        "AppointmentTime": "2023-08-08T23:35:13+07:00",
+        "IsVoid": false,
+        "UserCreate": "21239",
+        "CreateAt": "2023-08-08T23:35:13+07:00",
+        "ScheduleSlotId": 1
+    },
+    "message": "Create appointment has been successfully!",
+    "status": 201
+} */

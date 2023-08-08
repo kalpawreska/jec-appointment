@@ -13,7 +13,7 @@ import (
 // #region Trademark
 
 // This software, all associated documentation, and all copies are CONFIDENTIAL INFORMATION of Kalpavriksha
-// http://www.fwahyudianto.id
+// https://www.fwahyudianto.id
 // ® Wahyudianto, Fajar
 // Email 	: me@fwahyudianto.id
 
