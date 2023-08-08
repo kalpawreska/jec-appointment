@@ -3,4 +3,4 @@
 
 <!-- Command -->
 <!-- ! Generate Proto -->
-# protoc --go_out=. ./domains/appointment/proto/*.proto
+# protoc --go_out=. ./domain/appointment/proto/*.proto
