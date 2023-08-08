@@ -1,0 +1,70 @@
+syntax = "proto3";
+
+package proto;
+option go_package = "./domain/appointment";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/Empty.proto";
+
+
+// #region Appointment Message Proto
+//  [Response] Get appointment list
+message AppointmentListProto {
+    repeated AppointmentProto appointments = 1;
+}
+
+//  [Response] Get appointment
+message AppointmentProto {
+    string healthcare_id = 1;
+    string appointment_no = 2;
+    string paramedic_id = 3;
+    string patient_id = 4;
+    google.protobuf.Timestamp appointment_date = 5;
+    google.protobuf.Timestamp appointment_time = 6;
+    bool is_void = 7;
+    string user_create = 8;
+    google.protobuf.Timestamp create_at = 9;
+    int64 schedule_slot_id = 10;
+}
+
+// Get appointment based on Healthcare ID and Appointment No
+message AppointmentGetProto {
+    string healthcare_id = 1;
+    string appointment_no = 2;
+}
+
+// Add appointment
+message AppointmentAddProto {
+    AppointmentProto addappointment = 1;
+}
+
+// Update appointment
+message AppointmentUpdateProto {
+    AppointmentProto updateappointment = 1;
+}
+
+// Delete appointment
+message AppointmentDeleteProto {
+    AppointmentProto deleteappointment = 1;
+}
+
+//  [Response] Delete appointment
+message AppointmentDeleteResponseProto {
+    string healthcare_id = 1;
+    string appointment_no = 2;
+}
+
+// #endregion end of Appointment Proto
+
+// #region Appointment Service
+
+service AppointmentService {
+    rpc List(google.protobuf.Empty) returns (AppointmentListProto) {}
+    rpc ListByParam(AppointmentProto) returns (AppointmentListProto) {}    
+    rpc Get(AppointmentGetProto) returns (AppointmentProto) {}    
+    rpc Add(AppointmentAddProto) returns (AppointmentProto) {}    
+    rpc Update(AppointmentUpdateProto) returns (AppointmentProto) {}    
+    rpc Delete(AppointmentDeleteProto) returns (AppointmentDeleteResponseProto) {}    
+}
+
+// #endregion end of Appointment Service
