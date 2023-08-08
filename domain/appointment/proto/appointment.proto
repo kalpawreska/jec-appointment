@@ -7,6 +7,7 @@ package appointment;
 //  This option defines the import path of the package that will contain all the generated code for this file.
 option go_package = "./domain/appointment";
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/Empty.proto";
 
 // #region Appointment Message Proto
 
@@ -29,4 +30,44 @@ message AppointmentProto {
     int64 schedule_slot_id = 10;
 }
 
+// Get appointment based on Healthcare ID and Appointment No
+message AppointmentGetProto {
+    string healthcare_id = 1;
+    string appointment_no = 2;
+}
+
+// Add appointment
+message AppointmentAddProto {
+    AppointmentProto addappointment = 1;
+}
+
+// Update appointment
+message AppointmentUpdateProto {
+    AppointmentProto updateappointment = 1;
+}
+
+// Delete appointment
+message AppointmentDeleteProto {
+    AppointmentProto deleteappointment = 1;
+}
+
+//  [Response] Delete appointment
+message AppointmentDeleteResponseProto {
+    string healthcare_id = 1;
+    string appointment_no = 2;
+}
+
 // #endregion end of Appointment Proto
+
+// #region Appointment Service
+
+service AppointmentService {
+    rpc List(google.protobuf.Empty) returns (AppointmentListProto) {}
+    rpc ListByParam(AppointmentProto) returns (AppointmentListProto) {}	
+    rpc Get(AppointmentGetProto) returns (AppointmentProto) {}    
+    rpc Add(AppointmentAddProto) returns (AppointmentProto) {}    
+    rpc Update(AppointmentUpdateProto) returns (AppointmentProto) {}    
+    rpc Delete(AppointmentDeleteProto) returns (AppointmentDeleteResponseProto) {}    
+}
+
+// #endregion end of Appointment Service

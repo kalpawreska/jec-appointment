@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/golang/protobuf/ptypes"
-	appointments "github.com/kalpawreska/jec-appointment/domains/appointment"
+	appointments "github.com/kalpawreska/jec-appointment/domain/appointment"
 )
 
 func main() {
@@ -23,7 +23,7 @@ func main() {
 		log.Println(err)
 	}
 
-	var oAppointment = appointments.Appointment{
+	var oAppointment = appointments.AppointmentProto{
 		HealthcareId:    "002",
 		AppointmentNo:   "AP230807-00001",
 		ParamedicId:     "J0001",
@@ -36,7 +36,7 @@ func main() {
 		ScheduleSlotId:  1,
 	}
 
-	var oAppointmentList = appointments.AppointmentList{List: []*appointments.Appointment{&oAppointment}}
+	var oAppointmentList = appointments.AppointmentListProto{Appointments: []*appointments.AppointmentProto{&oAppointment}}
 
-	log.Printf("data: \n%v", oAppointmentList.List)
+	log.Printf("data: \n%v", oAppointmentList.Appointments)
 }
