@@ -17,16 +17,20 @@ import (
 // #endregion
 
 func RouterInit(r fiber.Router) {
-	svc := AppointmentService()
-	handler := AppointmentHandler(svc)
+	// svc := AppointmentService()
+	handler := AppointmentHandler()
 
 	appointmentApi := r.Group("/api")
+	appointmentApi.Get("/appointment", handler.List)
+	appointmentApi.Get("/appointment/get", handler.Get)
 	appointmentApi.Post("/appointment", handler.Create)
+	appointmentApi.Put("/appointment", handler.Update)
+	appointmentApi.Delete("/appointment", handler.Delete)
 }
 
 func RouterInitWithDB(r fiber.Router, dbx *sqlx.DB) {
-	svc := AppointmentService()
-	handler := AppointmentHandler(svc)
+	// svc := AppointmentService()
+	handler := AppointmentHandler()
 
 	appointmentApi := r.Group("/api")
 	appointmentApi.Post("/appointment", handler.Create)
