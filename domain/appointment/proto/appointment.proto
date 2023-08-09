@@ -1,13 +1,16 @@
+//  Defines the syntax for the protocol buffer code
 syntax = "proto3";
 
-package proto;
-option go_package = "./domain/appointment";
+//  Declares the package in use. This prevents naming conflict between different projects
+package appointment;
 
+//  This option defines the import path of the package that will contain all the generated code for this file.
+option go_package = "./domain/appointment";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/Empty.proto";
 
-
 // #region Appointment Message Proto
+
 //  [Response] Get appointment list
 message AppointmentListProto {
     repeated AppointmentProto appointments = 1;
@@ -60,7 +63,7 @@ message AppointmentDeleteResponseProto {
 
 service AppointmentService {
     rpc List(google.protobuf.Empty) returns (AppointmentListProto) {}
-    rpc ListByParam(AppointmentProto) returns (AppointmentListProto) {}    
+    rpc ListByParam(AppointmentProto) returns (AppointmentListProto) {}	
     rpc Get(AppointmentGetProto) returns (AppointmentProto) {}    
     rpc Add(AppointmentAddProto) returns (AppointmentProto) {}    
     rpc Update(AppointmentUpdateProto) returns (AppointmentProto) {}    

@@ -41,7 +41,7 @@ func NewAppointmentServiceClient(cc grpc.ClientConnInterface) AppointmentService
 
 func (c *appointmentServiceClient) List(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*AppointmentListProto, error) {
 	out := new(AppointmentListProto)
-	err := c.cc.Invoke(ctx, "/proto.AppointmentService/List", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/appointment.AppointmentService/List", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -50,7 +50,7 @@ func (c *appointmentServiceClient) List(ctx context.Context, in *emptypb.Empty, 
 
 func (c *appointmentServiceClient) ListByParam(ctx context.Context, in *AppointmentProto, opts ...grpc.CallOption) (*AppointmentListProto, error) {
 	out := new(AppointmentListProto)
-	err := c.cc.Invoke(ctx, "/proto.AppointmentService/ListByParam", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/appointment.AppointmentService/ListByParam", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -59,7 +59,7 @@ func (c *appointmentServiceClient) ListByParam(ctx context.Context, in *Appointm
 
 func (c *appointmentServiceClient) Get(ctx context.Context, in *AppointmentGetProto, opts ...grpc.CallOption) (*AppointmentProto, error) {
 	out := new(AppointmentProto)
-	err := c.cc.Invoke(ctx, "/proto.AppointmentService/Get", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/appointment.AppointmentService/Get", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -68,7 +68,7 @@ func (c *appointmentServiceClient) Get(ctx context.Context, in *AppointmentGetPr
 
 func (c *appointmentServiceClient) Add(ctx context.Context, in *AppointmentAddProto, opts ...grpc.CallOption) (*AppointmentProto, error) {
 	out := new(AppointmentProto)
-	err := c.cc.Invoke(ctx, "/proto.AppointmentService/Add", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/appointment.AppointmentService/Add", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -77,7 +77,7 @@ func (c *appointmentServiceClient) Add(ctx context.Context, in *AppointmentAddPr
 
 func (c *appointmentServiceClient) Update(ctx context.Context, in *AppointmentUpdateProto, opts ...grpc.CallOption) (*AppointmentProto, error) {
 	out := new(AppointmentProto)
-	err := c.cc.Invoke(ctx, "/proto.AppointmentService/Update", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/appointment.AppointmentService/Update", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -86,7 +86,7 @@ func (c *appointmentServiceClient) Update(ctx context.Context, in *AppointmentUp
 
 func (c *appointmentServiceClient) Delete(ctx context.Context, in *AppointmentDeleteProto, opts ...grpc.CallOption) (*AppointmentDeleteResponseProto, error) {
 	out := new(AppointmentDeleteResponseProto)
-	err := c.cc.Invoke(ctx, "/proto.AppointmentService/Delete", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/appointment.AppointmentService/Delete", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -151,7 +151,7 @@ func _AppointmentService_List_Handler(srv interface{}, ctx context.Context, dec 
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/proto.AppointmentService/List",
+		FullMethod: "/appointment.AppointmentService/List",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AppointmentServiceServer).List(ctx, req.(*emptypb.Empty))
@@ -169,7 +169,7 @@ func _AppointmentService_ListByParam_Handler(srv interface{}, ctx context.Contex
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/proto.AppointmentService/ListByParam",
+		FullMethod: "/appointment.AppointmentService/ListByParam",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AppointmentServiceServer).ListByParam(ctx, req.(*AppointmentProto))
@@ -187,7 +187,7 @@ func _AppointmentService_Get_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/proto.AppointmentService/Get",
+		FullMethod: "/appointment.AppointmentService/Get",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AppointmentServiceServer).Get(ctx, req.(*AppointmentGetProto))
@@ -205,7 +205,7 @@ func _AppointmentService_Add_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/proto.AppointmentService/Add",
+		FullMethod: "/appointment.AppointmentService/Add",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AppointmentServiceServer).Add(ctx, req.(*AppointmentAddProto))
@@ -223,7 +223,7 @@ func _AppointmentService_Update_Handler(srv interface{}, ctx context.Context, de
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/proto.AppointmentService/Update",
+		FullMethod: "/appointment.AppointmentService/Update",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AppointmentServiceServer).Update(ctx, req.(*AppointmentUpdateProto))
@@ -241,7 +241,7 @@ func _AppointmentService_Delete_Handler(srv interface{}, ctx context.Context, de
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/proto.AppointmentService/Delete",
+		FullMethod: "/appointment.AppointmentService/Delete",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AppointmentServiceServer).Delete(ctx, req.(*AppointmentDeleteProto))
@@ -253,7 +253,7 @@ func _AppointmentService_Delete_Handler(srv interface{}, ctx context.Context, de
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var AppointmentService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "proto.AppointmentService",
+	ServiceName: "appointment.AppointmentService",
 	HandlerType: (*AppointmentServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
