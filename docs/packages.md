@@ -17,5 +17,6 @@
 # touch domain/appointment/appointmentService.go
 # touch domain/appointment/appointmentValidator.go
 # touch domain/appointment/appointmentBase.go
+# touch domain/appointment/appointmentRepository.go
 
 # touch pkg/jecvalidator/jecvalidator.go

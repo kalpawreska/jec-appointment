@@ -29,9 +29,14 @@ func RouterInit(r fiber.Router) {
 }
 
 func RouterInitWithDB(r fiber.Router, dbx *sqlx.DB) {
-	svc := NewAppointmentService()
+	repo := NewAppointmentRepository(dbx)
+	svc := NewAppointmentServiceWithDB(repo)
 	handler := NewAppointmentHandler(svc)
 
 	appointmentApi := r.Group("/api")
+	appointmentApi.Get("/appointment", handler.List)
+	appointmentApi.Get("/appointment/get", handler.Get)
 	appointmentApi.Post("/appointment", handler.Create)
+	appointmentApi.Put("/appointment", handler.Update)
+	appointmentApi.Delete("/appointment", handler.Delete)
 }

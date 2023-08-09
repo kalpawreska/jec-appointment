@@ -88,7 +88,7 @@ func (h appointmentHandler) Create(ctx *fiber.Ctx) error {
 		return ctx.JSON(err)
 	}
 
-	err := h.appointmentSvc.CreateService(*req)
+	err := h.appointmentSvc.CreateService(ctx.Context(), *req)
 	if err != nil {
 		return err
 	}
