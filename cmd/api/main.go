@@ -57,8 +57,8 @@ func main() {
 
 	appointment.RouterInitWithDB(app, dbConn)
 
-	log.Println("Appointment Services Running at port 9091")
-	app.Listen(":9091")
+	log.Println("Appointment API Services Running at port " + tools.GetEnv("BASE_PORT"))
+	app.Listen(tools.GetEnv("BASE_PORT"))
 }
 
 /*

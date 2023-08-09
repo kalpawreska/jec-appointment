@@ -5,6 +5,7 @@ package appointment
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/jmoiron/sqlx"
+	"google.golang.org/grpc"
 )
 
 // #region Trademark
@@ -39,4 +40,12 @@ func RouterInitWithDB(r fiber.Router, dbx *sqlx.DB) {
 	appointmentApi.Post("/appointment", handler.Create)
 	appointmentApi.Put("/appointment", handler.Update)
 	appointmentApi.Delete("/appointment", handler.Delete)
+}
+
+func RouterInitGRPC(server *grpc.Server, db *sqlx.DB) {
+	repo := NewAppointmentRepository(db)
+	svc := NewAppointmentServiceWithDB(repo)
+	handler := NewAppointmentGrpcHandler(svc)
+
+	RegisterAppointmentServiceServer(server, &handler)
 }

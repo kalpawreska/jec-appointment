@@ -42,6 +42,10 @@ type Session struct {
 	AuthSessionId string `env:"AUTH_SESSION"`
 }
 
+type Grpc struct {
+	GrpcPort string `env:"GRPC_PORT"`
+}
+
 func LoadConfig() (cfg Config, err error) {
 	err = godotenv.Load("../../.env")
 	if err != nil {
