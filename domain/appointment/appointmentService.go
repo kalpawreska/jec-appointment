@@ -18,7 +18,7 @@ type appointmentService struct {
 }
 
 // Declare Appointment Service
-func AppointmentService() appointmentService {
+func NewAppointmentService() appointmentService {
 	return appointmentService{}
 }
 

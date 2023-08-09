@@ -17,11 +17,16 @@ import (
 
 // Declare Appointment Handler construct
 type appointmentHandler struct {
+	// Access Service
+	appointmentSvc appointmentService
 }
 
 // Declare Appointment Handler
-func AppointmentHandler() appointmentHandler {
-	return appointmentHandler{}
+// @Param appointmentService aka p_oService
+func NewAppointmentHandler(p_oService appointmentService) appointmentHandler {
+	return appointmentHandler{
+		appointmentSvc: p_oService,
+	}
 }
 
 // Get Appointment List.
@@ -75,7 +80,7 @@ func (h appointmentHandler) Get(ctx *fiber.Ctx) error {
 // @Router /appointment [POST]
 // @Tags Appointment
 func (h appointmentHandler) Create(ctx *fiber.Ctx) error {
-	req := new(AppointmentAddProto)
+	req := new(AppointmentRequest)
 	if err := ctx.BodyParser(req); err != nil {
 		return err
 	}
@@ -83,10 +88,10 @@ func (h appointmentHandler) Create(ctx *fiber.Ctx) error {
 		return ctx.JSON(err)
 	}
 
-	// err := h.appointmentSvc.CreateService(*req)
-	// if err != nil {
-	// 	return err
-	// }
+	err := h.appointmentSvc.CreateService(*req)
+	if err != nil {
+		return err
+	}
 
 	return ctx.Status(fiber.StatusCreated).JSON(map[string]interface{}{
 		"status":  fiber.StatusCreated,
