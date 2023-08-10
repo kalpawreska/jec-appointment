@@ -22,11 +22,19 @@ import (
 
 // #endregion
 
+// @title JEC Appointment Go Service
+// @version 1.0.0
+// @description JEC Appointment Go Service
+// @contact.name JEC
+// @contact.email no-reply@jec.co.id
+// @host jec.co.id
+// @schemes https
+// @BasePath /
 func main() {
 	//  Load Environtment
 	err := godotenv.Load("../../.env")
 	if err != nil {
-		log.Fatalf("Get Environtment Failed :%v", err)
+		log.Printf("Get Environtment Failed :%v", err)
 	}
 
 	//  Database Initial
@@ -58,7 +66,11 @@ func main() {
 	appointment.RouterInitWithDB(app, dbConn)
 
 	log.Println("Appointment API Services Running at port " + tools.GetEnv("BASE_PORT"))
-	app.Listen(tools.GetEnv("BASE_PORT"))
+
+	if err := app.Listen(tools.GetEnv("BASE_PORT")); err != nil {
+		log.Panic(err)
+	}
+
 }
 
 /*

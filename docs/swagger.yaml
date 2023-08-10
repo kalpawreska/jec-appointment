@@ -1,0 +1,275 @@
+basePath: /
+definitions:
+  domain_appointment.AppointmentDeleteProto:
+    properties:
+      deleteappointment:
+        $ref: '#/definitions/domain_appointment.AppointmentProto'
+    type: object
+  domain_appointment.AppointmentProto:
+    properties:
+      appointment_date:
+        $ref: '#/definitions/timestamppb.Timestamp'
+      appointment_no:
+        type: string
+      appointment_time:
+        $ref: '#/definitions/timestamppb.Timestamp'
+      create_at:
+        $ref: '#/definitions/timestamppb.Timestamp'
+      healthcare_id:
+        type: string
+      is_void:
+        type: boolean
+      paramedic_id:
+        type: string
+      patient_id:
+        type: string
+      schedule_slot_id:
+        type: integer
+      user_create:
+        type: string
+    type: object
+  domain_appointment.AppointmentRequest:
+    properties:
+      AppointmentDate:
+        type: string
+      AppointmentNo:
+        type: string
+      AppointmentTime:
+        type: string
+      CreateAt:
+        type: string
+      HealthcareId:
+        type: string
+      IsVoid:
+        type: boolean
+      ParamedicId:
+        type: string
+      PatientId:
+        type: string
+      ScheduleSlotId:
+        type: integer
+      UserCreate:
+        type: string
+    type: object
+  domain_appointment.AppointmentUpdateProto:
+    properties:
+      updateappointment:
+        $ref: '#/definitions/domain_appointment.AppointmentProto'
+    type: object
+  timestamppb.Timestamp:
+    properties:
+      nanos:
+        description: |-
+          Non-negative fractions of a second at nanosecond resolution. Negative
+          second values with fractions must still have non-negative nanos values
+          that count forward in time. Must be from 0 to 999,999,999
+          inclusive.
+        type: integer
+      seconds:
+        description: |-
+          Represents seconds of UTC time since Unix epoch
+          1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to
+          9999-12-31T23:59:59Z inclusive.
+        type: integer
+    type: object
+host: jec.co.id
+info:
+  contact:
+    email: no-reply@jec.co.id
+    name: JEC
+  description: JEC Appointment Go Service
+  title: JEC Appointment Go Service
+  version: 1.0.0
+paths:
+  /appointment:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Appointment.
+      parameters:
+      - description: Data request
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/domain_appointment.AppointmentDeleteProto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            additionalProperties: true
+            type: object
+        "202":
+          description: accepted
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: bad request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: no found
+          schema:
+            additionalProperties: true
+            type: object
+      summary: A newly deleted Appointment.
+      tags:
+      - Appointment
+    get:
+      consumes:
+      - application/json
+      description: Get Appointment List.
+      parameters:
+      - description: Healthcare ID
+        in: query
+        name: healthcare_id
+        type: string
+      - description: Appointment No
+        in: query
+        name: appointment_no
+        type: string
+      - description: Patient ID
+        in: query
+        name: patient_id
+        type: string
+      - description: Paramedic No
+        in: query
+        name: paramedic_id
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: bad request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: no found
+          schema:
+            additionalProperties: true
+            type: object
+      summary: List of Appointment Object.
+      tags:
+      - Appointment
+    post:
+      consumes:
+      - application/json
+      description: Create Appointment.
+      parameters:
+      - description: Data request
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/domain_appointment.AppointmentRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: created
+          schema:
+            additionalProperties: true
+            type: object
+        "204":
+          description: no content
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: bad request
+          schema:
+            additionalProperties: true
+            type: object
+      summary: A newly created Appointment.
+      tags:
+      - Appointment
+    put:
+      consumes:
+      - application/json
+      description: Update Appointment.
+      parameters:
+      - description: Data request
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/domain_appointment.AppointmentUpdateProto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            additionalProperties: true
+            type: object
+        "201":
+          description: created
+          schema:
+            additionalProperties: true
+            type: object
+        "204":
+          description: no content
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: bad request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: no found
+          schema:
+            additionalProperties: true
+            type: object
+      summary: A newly updated Appointment.
+      tags:
+      - Appointment
+  /appointment/get:
+    get:
+      consumes:
+      - application/json
+      description: Get Appointment By Healthcare ID and Appointment No.
+      parameters:
+      - description: Healthcare ID
+        in: query
+        name: healthcare_id
+        type: string
+      - description: Appointment No
+        in: query
+        name: appointment_no
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: bad request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: no found
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Appointment Object.
+      tags:
+      - Appointment
+schemes:
+- https
+swagger: "2.0"

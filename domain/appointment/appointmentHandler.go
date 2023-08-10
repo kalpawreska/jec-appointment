@@ -34,13 +34,16 @@ func NewAppointmentHandler(p_oService appointmentService) appointmentHandler {
 // @Description Get Appointment List.
 // @Accept application/json
 // @Produce application/json
-// @Success 200 {object} "success"
-// @Failure 400 {object} "bad request"
-// @Failure 404 {object} "no found"
+// @Success 200 {object} map[string]interface{} "success"
+// @Failure 400 {object} map[string]interface{} "bad request"
+// @Failure 404 {object} map[string]interface{} "no found"
 // @Router /appointment [GET]
 // @Tags Appointment
 func (h appointmentHandler) List(ctx *fiber.Ctx) error {
-	resp := AppointmentProto{}
+	resp, err := h.appointmentSvc.ListService(ctx.Context())
+	if err != nil {
+		return err
+	}
 
 	return ctx.Status(fiber.StatusOK).JSON(map[string]interface{}{
 		"status":  fiber.StatusOK,
@@ -54,18 +57,31 @@ func (h appointmentHandler) List(ctx *fiber.Ctx) error {
 // @Description Get Appointment By Healthcare ID and Appointment No.
 // @Accept application/json
 // @Produce application/json
-// @Success 200 {object} "success"
-// @Failure 400 {object} "bad request"
-// @Failure 404 {object} "no found"
-// @Router /appointment/get?{healthcare_id}&{appointment_no} [GET]
+// @Success 200 {object} map[string]interface{} "success"
+// @Failure 400 {object} map[string]interface{} "bad request"
+// @Failure 404 {object} map[string]interface{} "no found"
+// @Param healthcare_id query string false "Healthcare ID"
+// @Param appointment_no query string false "Appointment No"
+// @Router /appointment/get [GET]
 // @Tags Appointment
 func (h appointmentHandler) Get(ctx *fiber.Ctx) error {
-	req := AppointmentGetProto{}
+	req := new(AppointmentRequest)
+	if err := ctx.BodyParser(req); err != nil {
+		return err
+	}
+	if err := ValidateStruct(req); err != nil {
+		return ctx.JSON(err)
+	}
+
+	resp, err := h.appointmentSvc.GetService(ctx.Context(), *req)
+	if err != nil {
+		return err
+	}
 
 	return ctx.Status(fiber.StatusOK).JSON(map[string]interface{}{
 		"status":  fiber.StatusOK,
-		"message": "Get Appointment has been successfully!",
-		"data":    &req,
+		"message": "Get Apppointment has been successfully!",
+		"data":    &resp,
 	})
 }
 
@@ -74,9 +90,10 @@ func (h appointmentHandler) Get(ctx *fiber.Ctx) error {
 // @Description Create Appointment.
 // @Accept application/json
 // @Produce application/json
-// @Success 201 {object} "created"
-// @Failure 204 {object} "no content"
-// @Failure 400 {object} "bad request"
+// @Param data body AppointmentRequest true "Data request"
+// @Success 201 {object} map[string]interface{} "created"
+// @Failure 204 {object} map[string]interface{} "no content"
+// @Failure 400 {object} map[string]interface{} "bad request"
 // @Router /appointment [POST]
 // @Tags Appointment
 func (h appointmentHandler) Create(ctx *fiber.Ctx) error {
@@ -105,11 +122,12 @@ func (h appointmentHandler) Create(ctx *fiber.Ctx) error {
 // @Description Update Appointment.
 // @Accept application/json
 // @Produce application/json
-// @Success 200 {object} "success"
-// @Success 201 {object} "created"
-// @Failure 204 {object} "no content"
-// @Failure 400 {object} "bad request"
-// @Failure 404 {object} "no found"
+// @Param data body AppointmentUpdateProto true "Data request"
+// @Success 200 {object} map[string]interface{} "success"
+// @Success 201 {object} map[string]interface{} "created"
+// @Failure 204 {object} map[string]interface{} "no content"
+// @Failure 400 {object} map[string]interface{} "bad request"
+// @Failure 404 {object} map[string]interface{} "no found"
 // @Router /appointment [PUT]
 // @Tags Appointment
 func (h appointmentHandler) Update(ctx *fiber.Ctx) error {
@@ -133,10 +151,11 @@ func (h appointmentHandler) Update(ctx *fiber.Ctx) error {
 // @Description Delete Appointment.
 // @Accept application/json
 // @Produce application/json
-// @Success 200 {object} "success"
-// @Failure 202 {object} "accepted"
-// @Failure 400 {object} "bad request"
-// @Failure 404 {object} "no found"
+// @Param data body AppointmentDeleteProto true "Data request"
+// @Success 200 {object} map[string]interface{} "success"
+// @Failure 202 {object} map[string]interface{} "accepted"
+// @Failure 400 {object} map[string]interface{} "bad request"
+// @Failure 404 {object} map[string]interface{} "no found"
 // @Router /appointment [DELETE]
 // @Tags Appointment
 func (h appointmentHandler) Delete(ctx *fiber.Ctx) error {
