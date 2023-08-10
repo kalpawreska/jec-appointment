@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net"
 
@@ -41,7 +42,7 @@ func main() {
 	appointment.RouterInitGRPC(srv, dbConn)
 
 	log.Println("Registered GRPC Route ...")
-	listen, err := net.Listen("tcp", tools.GetEnv("GRPC_PORT"))
+	listen, err := net.Listen("tcp", fmt.Sprintf(":%s", tools.GetEnv("GRPC_PORT")))
 	if err != nil {
 		panic(err)
 	}

@@ -3,10 +3,17 @@ package appointment
 
 //	Import library
 import (
-	"math"
-
 	"github.com/gofiber/fiber/v2"
 )
+
+// #region Trademark
+
+// This software, all associated documentation, and all copies are CONFIDENTIAL INFORMATION of Kalpavriksha
+// https://www.fwahyudianto.id
+// ® Wahyudianto, Fajar
+// Email 	: me@fwahyudianto.id
+
+// #endregion
 
 // Declare Appointment Handler construct
 type appointmentHandler struct {
@@ -15,7 +22,7 @@ type appointmentHandler struct {
 }
 
 // Declare Appointment Handler
-// @Param appointmentService aka p_oService
+// Param appointmentService aka p_oService
 func NewAppointmentHandler(p_oService appointmentService) appointmentHandler {
 	return appointmentHandler{
 		appointmentSvc: p_oService,
@@ -27,41 +34,31 @@ func NewAppointmentHandler(p_oService appointmentService) appointmentHandler {
 // @Description Get Appointment List.
 // @Accept application/json
 // @Produce application/json
-// @Success 200 {object} "success"
-// @Failure 400 {object} "bad request"
-// @Failure 404 {object} "no found"
+// @Param healthcare_id query string false "Healthcare ID"
+// @Param appointment_no query string false "Appointment No"
+// @Param patient_id query string false "Patient ID"
+// @Param paramedic_id query string false "Paramedic No"
+// @Success 200 {object} map[string]interface{} "success"
+// @Failure 400 {object} map[string]interface{} "bad request"
+// @Failure 404 {object} map[string]interface{} "no found"
 // @Router /appointment [GET]
 // @Tags Appointment
 func (h appointmentHandler) List(ctx *fiber.Ctx) error {
-	var (
-		limit int = ctx.QueryInt("limit")
-		page  int = ctx.QueryInt("page")
-	)
-
-	if page == 0 {
-		page = 1
+	appointmentRequest := AppointmentRequest{
+		HealthcareId:  ctx.FormValue("healthcare_id"),
+		AppointmentNo: ctx.FormValue("appointment_no"),
+		PatientId:     ctx.FormValue("patient_no"),
+		ParamedicId:   ctx.FormValue("paramedic_id"),
 	}
-
-	if limit == 0 {
-		limit = 5
-	}
-
-	items, total, err := h.appointmentSvc.ListAppointment(ctx.UserContext(), limit, page)
+	resp, err := h.appointmentSvc.ListService(ctx.Context(), &appointmentRequest)
 	if err != nil {
 		return err
 	}
 
-	totalPage := math.Ceil(float64(total) / float64(limit))
-	if totalPage == 0 {
-		totalPage = 1
-	}
-
 	return ctx.Status(fiber.StatusOK).JSON(map[string]interface{}{
-		"status":     fiber.StatusOK,
-		"message":    "Get Appointment List has been successfully!",
-		"data":       items,
-		"total":      total,
-		"total_page": totalPage,
+		"status":  fiber.StatusOK,
+		"message": "Get Appointment List has been successfully!",
+		"data":    &resp,
 	})
 }
 
@@ -70,32 +67,28 @@ func (h appointmentHandler) List(ctx *fiber.Ctx) error {
 // @Description Get Appointment By Healthcare ID and Appointment No.
 // @Accept application/json
 // @Produce application/json
-// @Success 200 {object} "success"
-// @Failure 400 {object} "bad request"
-// @Failure 404 {object} "no found"
-// @Router /appointment/get?{healthcare_id}&{appointment_no} [GET]
+// @Success 200 {object} map[string]interface{} "success"
+// @Failure 400 {object} map[string]interface{} "bad request"
+// @Failure 404 {object} map[string]interface{} "no found"
+// @Param healthcare_id query string false "Healthcare ID"
+// @Param appointment_no query string false "Appointment No"
+// @Router /appointment/get [GET]
 // @Tags Appointment
 func (h appointmentHandler) Get(ctx *fiber.Ctx) error {
-	var (
-		appointmentNo string = ctx.Query("appointment_no")
-		healthCareID  string = ctx.Query("healthcare_id")
-	)
-
-	if healthCareID == "" {
-		return ctx.Status(fiber.ErrBadRequest.Code).JSON(map[string]string{
-			"message": "please input healthcare id",
-		})
+	appointmentRequest := AppointmentRequest{
+		HealthcareId:  ctx.FormValue("healthcare_id"),
+		AppointmentNo: ctx.FormValue("appointment_no"),
 	}
 
-	res, err := h.appointmentSvc.DetailAppointment(ctx.UserContext(), appointmentNo, healthCareID)
+	resp, err := h.appointmentSvc.GetSingleService(ctx.Context(), appointmentRequest.AppointmentNo, appointmentRequest.HealthcareId)
 	if err != nil {
 		return err
 	}
 
 	return ctx.Status(fiber.StatusOK).JSON(map[string]interface{}{
 		"status":  fiber.StatusOK,
-		"message": "Get Appointment has been successfully!",
-		"data":    res,
+		"message": "Get Appointment List has been successfully!",
+		"data":    &resp,
 	})
 }
 
@@ -104,9 +97,10 @@ func (h appointmentHandler) Get(ctx *fiber.Ctx) error {
 // @Description Create Appointment.
 // @Accept application/json
 // @Produce application/json
-// @Success 201 {object} "created"
-// @Failure 204 {object} "no content"
-// @Failure 400 {object} "bad request"
+// @Param data body AppointmentRequest true "Data request"
+// @Success 201 {object} map[string]interface{} "created"
+// @Failure 204 {object} map[string]interface{} "no content"
+// @Failure 400 {object} map[string]interface{} "bad request"
 // @Router /appointment [POST]
 // @Tags Appointment
 func (h appointmentHandler) Create(ctx *fiber.Ctx) error {
@@ -135,11 +129,12 @@ func (h appointmentHandler) Create(ctx *fiber.Ctx) error {
 // @Description Update Appointment.
 // @Accept application/json
 // @Produce application/json
-// @Success 200 {object} "success"
-// @Success 201 {object} "created"
-// @Failure 204 {object} "no content"
-// @Failure 400 {object} "bad request"
-// @Failure 404 {object} "no found"
+// @Param data body AppointmentUpdateProto true "Data request"
+// @Success 200 {object} map[string]interface{} "success"
+// @Success 201 {object} map[string]interface{} "created"
+// @Failure 204 {object} map[string]interface{} "no content"
+// @Failure 400 {object} map[string]interface{} "bad request"
+// @Failure 404 {object} map[string]interface{} "no found"
 // @Router /appointment [PUT]
 // @Tags Appointment
 func (h appointmentHandler) Update(ctx *fiber.Ctx) error {
@@ -163,10 +158,11 @@ func (h appointmentHandler) Update(ctx *fiber.Ctx) error {
 // @Description Delete Appointment.
 // @Accept application/json
 // @Produce application/json
-// @Success 200 {object} "success"
-// @Failure 202 {object} "accepted"
-// @Failure 400 {object} "bad request"
-// @Failure 404 {object} "no found"
+// @Param data body AppointmentDeleteProto true "Data request"
+// @Success 200 {object} map[string]interface{} "success"
+// @Failure 202 {object} map[string]interface{} "accepted"
+// @Failure 400 {object} map[string]interface{} "bad request"
+// @Failure 404 {object} map[string]interface{} "no found"
 // @Router /appointment [DELETE]
 // @Tags Appointment
 func (h appointmentHandler) Delete(ctx *fiber.Ctx) error {

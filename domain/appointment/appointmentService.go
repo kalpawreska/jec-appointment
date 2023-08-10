@@ -7,11 +7,20 @@ import (
 	"log"
 )
 
+// #region Trademark
+
+// This software, all associated documentation, and all copies are CONFIDENTIAL INFORMATION of Kalpavriksha
+// https://www.fwahyudianto.id
+// ® Wahyudianto, Fajar
+// Email 	: me@fwahyudianto.id
+
+// #endregion
+
 // Appointment Repository Interface
 type Repository interface {
 	AddRepo(ctx context.Context, app Appointment) (p_strAppointmentNo string, err error)
-	GetListAppointment(ctx context.Context, limit, page int) ([]Appointment, int, error)
-	GetByAppointmentNo(ctx context.Context, appointmentNo, healthCareID string) ([]Appointment, error)
+	GetSingleRepo(ctx context.Context, appointmentNo string, healthcareID string) (*Appointment, error)
+	ListRepo(ctx context.Context, request *AppointmentRequest) (*[]Appointment, error)
 }
 
 // Declare Appointment Service construct
@@ -47,53 +56,22 @@ func (asvc appointmentService) CreateService(ctx context.Context, req Appointmen
 	return nil
 }
 
-func (asvc appointmentService) ListAppointment(ctx context.Context, limit, page int) ([]AppointmentListResponse, int, error) {
-	result := make([]AppointmentListResponse, 0)
-
-	items, total, err := asvc.repo.GetListAppointment(ctx, limit, page)
+func (asvc appointmentService) GetSingleService(ctx context.Context, appointmentID string, healthcareID string) (*Appointment, error) {
+	appointment, err := asvc.repo.GetSingleRepo(ctx, appointmentID, healthcareID)
 	if err != nil {
-		return result, 0, err
+		return nil, err
 	}
 
-	result = make([]AppointmentListResponse, len(items))
-	for i, item := range items {
-		result[i].UserCreate = item.UserCreate
-		result[i].HealthcareId = item.HealthcareId
-		result[i].AppointmentDate = item.AppointmentDate
-		result[i].AppointmentTime = item.AppointmentTime
-		result[i].ScheduleSlotId = item.ScheduleSlotId
-		result[i].IsVoid = item.IsVoid
-		result[i].ParamedicId = item.ParamedicId
-		result[i].PatientId = item.PatientId
-		result[i].CreateAt = item.CreateAt
-		result[i].AppointmentNo = item.AppointmentNo
-	}
-
-	return result, total, nil
+	return appointment, nil
 }
 
-func (asvc appointmentService) DetailAppointment(ctx context.Context, appointmentNo, healthCareID string) ([]AppointmentListResponse, error) {
-	var result []AppointmentListResponse
-
-	items, err := asvc.repo.GetByAppointmentNo(ctx, appointmentNo, healthCareID)
+func (asvc appointmentService) ListService(ctx context.Context, request *AppointmentRequest) (*[]Appointment, error) {
+	appointments, err := asvc.repo.ListRepo(ctx, request)
 	if err != nil {
-		return result, err
+		return nil, err
 	}
 
-	result = make([]AppointmentListResponse, len(items))
-	for i, item := range items {
-		result[i].UserCreate = item.UserCreate
-		result[i].HealthcareId = item.HealthcareId
-		result[i].AppointmentDate = item.AppointmentDate
-		result[i].AppointmentTime = item.AppointmentTime
-		result[i].ScheduleSlotId = item.ScheduleSlotId
-		result[i].IsVoid = item.IsVoid
-		result[i].ParamedicId = item.ParamedicId
-		result[i].PatientId = item.PatientId
-		result[i].CreateAt = item.CreateAt
-		result[i].AppointmentNo = item.AppointmentNo
-	}
-	return result, nil
+	return appointments, nil
 }
 
 // #endregion end of Business Logic Method

@@ -3,6 +3,7 @@ package main
 
 //	Import library
 import (
+	"fmt"
 	"log"
 
 	"jec-appointment/domain/appointment"
@@ -14,6 +15,23 @@ import (
 	"github.com/joho/godotenv"
 )
 
+// #region Trademark
+
+// This software, all associated documentation, and all copies are CONFIDENTIAL INFORMATION of Kalpavriksha
+// https://www.fwahyudianto.id
+// ® Wahyudianto, Fajar
+// Email 	: me@fwahyudianto.id
+
+// #endregion
+
+// @title JEC Appointment Go Service
+// @version 1.0.0
+// @description JEC Appointment Go Service
+// @contact.name JEC
+// @contact.email no-reply@jec.co.id
+// @host jec.co.id
+// @schemes https
+// @BasePath /
 func main() {
 	//  Load Environtment
 	err := godotenv.Load("././.env")
@@ -50,7 +68,11 @@ func main() {
 	appointment.RouterInitWithDB(app, dbConn)
 
 	log.Println("Appointment API Services Running at port " + tools.GetEnv("BASE_PORT"))
-	app.Listen(tools.GetEnv("BASE_PORT"))
+
+	if err := app.Listen(fmt.Sprintf(":%s", tools.GetEnv("BASE_PORT"))); err != nil {
+		log.Panic(err)
+	}
+
 }
 
 /*

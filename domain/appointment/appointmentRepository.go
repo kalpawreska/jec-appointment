@@ -4,10 +4,24 @@ package appointment
 //	Import library
 import (
 	"context"
+	"errors"
+	"fmt"
+	"log"
+	"strings"
+
 	tools "jec-appointment/pkg/jectools"
 
 	"github.com/jmoiron/sqlx"
 )
+
+// #region Trademark
+
+// This software, all associated documentation, and all copies are CONFIDENTIAL INFORMATION of Kalpavriksha
+// https://www.fwahyudianto.id
+// ® Wahyudianto, Fajar
+// Email 	: me@fwahyudianto.id
+
+// #endregion
 
 // Declare Appointment Repository construct
 type appointmentRepository struct {
@@ -50,51 +64,78 @@ func (r appointmentRepository) AddRepo(ctx context.Context, app Appointment) (p_
 	return
 }
 
-func (r appointmentRepository) GetListAppointment(ctx context.Context, limit, page int) ([]Appointment, int, error) {
-	var (
-		result = make([]Appointment, 0)
-		offset = (page * limit) - limit
-	)
-
-	query := `SELECT * FROM appointments LIMIT ? OFFSET ?`
-	query = r.db.Rebind(query)
-
-	// fmt.Println(query)
-	// fmt.Println(limit, offset)
-	// fmt.Println("...............")
-
-	if err := r.db.SelectContext(ctx, &result, query, limit, offset); err != nil {
-		return result, 0, err
+func (r appointmentRepository) GetSingleRepo(ctx context.Context, appointmentNo string, healthcareID string) (*Appointment, error) {
+	if len(appointmentNo) == 0 && len(healthcareID) == 0 {
+		return nil, errors.New("incomplete parameter")
 	}
 
-	var total int
-	queryCount := `SELECT COUNT(*) AS total FROM appointments`
-	if err := r.db.GetContext(ctx, &total, queryCount); err != nil {
-		return result, 0, err
+	db := r.db
+	appointment := Appointment{}
+	query := "SELECT * FROM appointments WHERE"
+	param := []interface{}{}
+
+	if len(appointmentNo) > 0 {
+		query = query + " appointment_no = $1"
+		param = append(param, appointmentNo)
+	}
+	if len(healthcareID) > 0 {
+		a := "$1"
+		if len(appointmentNo) > 0 {
+			a = "$2"
+			query = query + " AND "
+		}
+		query = query + " healthcare_id = " + a
+		param = append(param, healthcareID)
 	}
 
-	return result, total, nil
+	db.Get(&appointment, query, param...)
+	if len(appointment.AppointmentNo) == 0 {
+		return nil, errors.New("appointment not found")
+	}
+
+	return &appointment, nil
 }
 
-func (r appointmentRepository) GetByAppointmentNo(ctx context.Context, appointmentNo, healthCareID string) ([]Appointment, error) {
-	var (
-		res  []Appointment
-		args []any
-	)
+func (r appointmentRepository) ListRepo(ctx context.Context, request *AppointmentRequest) (*[]Appointment, error) {
+	db := r.db
+	appointments := []Appointment{}
 
-	query := `SELECT * FROM appointments WHERE healthcare_id = ?`
-	args = append(args, healthCareID)
-
-	if appointmentNo != "" {
-		query += ` AND appointment_no = ?`
-		args = append(args, appointmentNo)
+	qry := "SELECT * FROM appointments "
+	where := []string{}
+	params := []interface{}{}
+	iterate := 1
+	if request != nil {
+		if len(request.AppointmentNo) > 0 {
+			where = append(where, fmt.Sprintf("appointment_no = $%d", iterate))
+			params = append(params, request.AppointmentNo)
+			iterate = iterate + 1
+		}
+		if len(request.HealthcareId) > 0 {
+			where = append(where, fmt.Sprintf("healthcare_id = $%d", iterate))
+			params = append(params, request.HealthcareId)
+			iterate = iterate + 1
+		}
+		if len(request.ParamedicId) > 0 {
+			where = append(where, fmt.Sprintf("paramedic_id = $%d", iterate))
+			params = append(params, request.ParamedicId)
+			iterate = iterate + 1
+		}
+		if len(request.PatientId) > 0 {
+			where = append(where, fmt.Sprintf("patient_id = $%d", iterate))
+			params = append(params, request.PatientId)
+		}
 	}
 
-	query = r.db.Rebind(query)
-
-	if err := r.db.SelectContext(ctx, &res, query, args...); err != nil {
-		return res, err
+	finalQuery := qry
+	if len(where) > 0 {
+		finalQuery = finalQuery + " WHERE " + strings.Join(where, " AND ")
+	}
+	finalQuery = finalQuery + " ORDER BY create_at DESC"
+	log.Printf("LOG FINAL QUERY := %s", finalQuery)
+	err := db.Select(&appointments, finalQuery, params...)
+	if err != nil {
+		log.Printf("ERR SQL = %+v", err)
 	}
 
-	return res, nil
+	return &appointments, nil
 }
