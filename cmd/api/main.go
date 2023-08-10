@@ -3,16 +3,14 @@ package main
 
 //	Import library
 import (
-	"fmt"
 	"log"
-
-	"jec-appointment/domain/appointment"
-	dbs "jec-appointment/pkg/jecconfiguration"
-	tools "jec-appointment/pkg/jectools"
-	customvalidator "jec-appointment/pkg/jecvalidator"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
+	"github.com/kalpawreska/jec-appointment/domain/appointment"
+	dbs "github.com/kalpawreska/jec-appointment/pkg/jecconfiguration"
+	tools "github.com/kalpawreska/jec-appointment/pkg/jectools"
+	customvalidator "github.com/kalpawreska/jec-appointment/pkg/jecvalidator"
 )
 
 // #region Trademark
@@ -34,9 +32,9 @@ import (
 // @BasePath /
 func main() {
 	//  Load Environtment
-	err := godotenv.Load("././.env")
+	err := godotenv.Load("../../.env")
 	if err != nil {
-		log.Fatalf("Get Environtment Failed :%v", err)
+		log.Printf("Get Environtment Failed :%v", err)
 	}
 
 	//  Database Initial
@@ -69,7 +67,7 @@ func main() {
 
 	log.Println("Appointment API Services Running at port " + tools.GetEnv("BASE_PORT"))
 
-	if err := app.Listen(fmt.Sprintf(":%s", tools.GetEnv("BASE_PORT"))); err != nil {
+	if err := app.Listen(tools.GetEnv("BASE_PORT")); err != nil {
 		log.Panic(err)
 	}
 

@@ -1,23 +1,21 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net"
 
-	"jec-appointment/domain/appointment"
-	dbs "jec-appointment/pkg/jecconfiguration"
-	tools "jec-appointment/pkg/jectools"
-
 	"github.com/joho/godotenv"
+	"github.com/kalpawreska/jec-appointment/domain/appointment"
+	dbs "github.com/kalpawreska/jec-appointment/pkg/jecconfiguration"
+	tools "github.com/kalpawreska/jec-appointment/pkg/jectools"
 	"google.golang.org/grpc"
 )
 
 func main() {
 	//  Load Environtment
-	err := godotenv.Load("././.env")
+	err := godotenv.Load("../../.env")
 	if err != nil {
-		log.Fatalf("Get Environtment Failed :%v", err)
+		log.Printf("Get Environtment Failed :%v", err)
 	}
 
 	//  Database Initial
@@ -42,7 +40,7 @@ func main() {
 	appointment.RouterInitGRPC(srv, dbConn)
 
 	log.Println("Registered GRPC Route ...")
-	listen, err := net.Listen("tcp", fmt.Sprintf(":%s", tools.GetEnv("GRPC_PORT")))
+	listen, err := net.Listen("tcp", tools.GetEnv("GRPC_PORT"))
 	if err != nil {
 		panic(err)
 	}

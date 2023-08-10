@@ -8,6 +8,15 @@ import (
 	"google.golang.org/grpc"
 )
 
+// #region Trademark
+
+// This software, all associated documentation, and all copies are CONFIDENTIAL INFORMATION of Kalpavriksha
+// https://www.fwahyudianto.id
+// ® Wahyudianto, Fajar
+// Email 	: me@fwahyudianto.id
+
+// #endregion
+
 func RouterInit(r fiber.Router) {
 	svc := NewAppointmentService()
 	handler := NewAppointmentHandler(svc)

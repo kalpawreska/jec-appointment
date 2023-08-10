@@ -9,6 +9,15 @@ import (
 	_ "github.com/lib/pq"
 )
 
+// #region Trademark
+
+// This software, all associated documentation, and all copies are CONFIDENTIAL INFORMATION of Kalpavriksha
+// https://www.fwahyudianto.id
+// ® Wahyudianto, Fajar
+// Email 	: me@fwahyudianto.id
+
+// #endregion
+
 func ConnectSqlx(config DbConfiguration) (db *sqlx.DB, err error) {
 	dsn := fmt.Sprintf(
 		"host=%s port=%s user=%s password=%s dbname=%s sslmode=%s TimeZone=Asia/Jakarta",

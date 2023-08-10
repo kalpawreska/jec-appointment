@@ -44,5 +44,6 @@ func (a *Appointment) ParseToAppointmentProto() *AppointmentProto {
 		CreateAt:        timestamppb.New(a.CreateAt),
 		ScheduleSlotId:  int64(a.ScheduleSlotId),
 	}
+
 	return &ap
 }

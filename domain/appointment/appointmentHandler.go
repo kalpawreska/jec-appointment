@@ -22,7 +22,7 @@ type appointmentHandler struct {
 }
 
 // Declare Appointment Handler
-// Param appointmentService aka p_oService
+// @Param appointmentService aka p_oService
 func NewAppointmentHandler(p_oService appointmentService) appointmentHandler {
 	return appointmentHandler{
 		appointmentSvc: p_oService,
@@ -34,23 +34,13 @@ func NewAppointmentHandler(p_oService appointmentService) appointmentHandler {
 // @Description Get Appointment List.
 // @Accept application/json
 // @Produce application/json
-// @Param healthcare_id query string false "Healthcare ID"
-// @Param appointment_no query string false "Appointment No"
-// @Param patient_id query string false "Patient ID"
-// @Param paramedic_id query string false "Paramedic No"
 // @Success 200 {object} map[string]interface{} "success"
 // @Failure 400 {object} map[string]interface{} "bad request"
 // @Failure 404 {object} map[string]interface{} "no found"
 // @Router /appointment [GET]
 // @Tags Appointment
 func (h appointmentHandler) List(ctx *fiber.Ctx) error {
-	appointmentRequest := AppointmentRequest{
-		HealthcareId:  ctx.FormValue("healthcare_id"),
-		AppointmentNo: ctx.FormValue("appointment_no"),
-		PatientId:     ctx.FormValue("patient_no"),
-		ParamedicId:   ctx.FormValue("paramedic_id"),
-	}
-	resp, err := h.appointmentSvc.ListService(ctx.Context(), &appointmentRequest)
+	resp, err := h.appointmentSvc.ListService(ctx.Context())
 	if err != nil {
 		return err
 	}
@@ -75,19 +65,22 @@ func (h appointmentHandler) List(ctx *fiber.Ctx) error {
 // @Router /appointment/get [GET]
 // @Tags Appointment
 func (h appointmentHandler) Get(ctx *fiber.Ctx) error {
-	appointmentRequest := AppointmentRequest{
-		HealthcareId:  ctx.FormValue("healthcare_id"),
-		AppointmentNo: ctx.FormValue("appointment_no"),
+	req := new(AppointmentRequest)
+	if err := ctx.BodyParser(req); err != nil {
+		return err
+	}
+	if err := ValidateStruct(req); err != nil {
+		return ctx.JSON(err)
 	}
 
-	resp, err := h.appointmentSvc.GetSingleService(ctx.Context(), appointmentRequest.AppointmentNo, appointmentRequest.HealthcareId)
+	resp, err := h.appointmentSvc.GetService(ctx.Context(), *req)
 	if err != nil {
 		return err
 	}
 
 	return ctx.Status(fiber.StatusOK).JSON(map[string]interface{}{
 		"status":  fiber.StatusOK,
-		"message": "Get Appointment List has been successfully!",
+		"message": "Get Apppointment has been successfully!",
 		"data":    &resp,
 	})
 }

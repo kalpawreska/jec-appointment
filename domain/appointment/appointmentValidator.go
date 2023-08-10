@@ -4,6 +4,15 @@ package appointment
 //	Import library
 import "github.com/go-playground/validator/v10"
 
+// #region Trademark
+
+// This software, all associated documentation, and all copies are CONFIDENTIAL INFORMATION of Kalpavriksha
+// https://www.fwahyudianto.id
+// ® Wahyudianto, Fajar
+// Email 	: me@fwahyudianto.id
+
+// #endregion
+
 type ErrorResponse struct {
 	FailedField string
 	Tag         string

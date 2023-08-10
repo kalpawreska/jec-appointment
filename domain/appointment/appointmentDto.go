@@ -1,9 +1,20 @@
+// Declares the package name
 package appointment
 
+//	Import library
 import (
 	"errors"
 	"time"
 )
+
+// #region Trademark
+
+// This software, all associated documentation, and all copies are CONFIDENTIAL INFORMATION of Kalpavriksha
+// https://www.fwahyudianto.id
+// ® Wahyudianto, Fajar
+// Email 	: me@fwahyudianto.id
+
+// #endregion
 
 // [Response] Declare Appointment List construct
 type AppointmentListResponse struct {
