@@ -8,7 +8,7 @@ require (
 	github.com/gofiber/fiber/v2 v2.48.0
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/joho/godotenv v1.5.1
-	github.com/lib/pq v1.10.9
+	github.com/lib/pq v1.2.0
 	github.com/swaggo/swag v1.16.1
 	google.golang.org/grpc v1.57.0
 	google.golang.org/protobuf v1.31.0
