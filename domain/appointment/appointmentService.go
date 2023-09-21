@@ -65,8 +65,6 @@ func (asvc appointmentService) ListService(ctx context.Context) ([]AppointmentLi
 		list[i].ScheduleSlotId = item.ScheduleSlotId
 	}
 
-	log.Printf("Get List Appointment [%v] successfully!\n", len(items))
-
 	return list, nil
 }
 
@@ -74,13 +72,10 @@ func (asvc appointmentService) ListService(ctx context.Context) ([]AppointmentLi
 func (asvc appointmentService) GetService(ctx context.Context, req AppointmentRequest) (res []Appointment, err error) {
 	model := req.ParseToEntity()
 
-	log.Println(model.HealthcareId, model.AppointmentNo)
 	res, err = asvc.repo.GetRepo(ctx, model.HealthcareId, model.AppointmentNo)
 	if err != nil {
 		return
 	}
-
-	log.Printf("Get Appointment based on [%v] and [%v] successfully!\n", model.HealthcareId, model.AppointmentNo)
 
 	return
 }

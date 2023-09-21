@@ -5,7 +5,6 @@ package appointment
 import (
 	"context"
 	"errors"
-	"log"
 
 	"github.com/jmoiron/sqlx"
 	tools "github.com/kalpawreska/jec-appointment/pkg/jectools"
@@ -70,14 +69,13 @@ func (r appointmentRepository) GetRepo(ctx context.Context, p_strHealthcareId st
 		query += ` AND appointment_no = ?`
 		args = append(args, p_strAppointmentNo)
 	}
-	// log.Println(query)
+
 	query = r.db.Rebind(query)
 
 	if err := r.db.SelectContext(ctx, &vrResult, query, args...); err != nil {
 		return vrResult, err
 	}
 
-	log.Println(vrResult)
 	return vrResult, nil
 }
 

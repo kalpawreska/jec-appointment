@@ -42,7 +42,22 @@ func NewAppointmentHandler(p_oService appointmentService) appointmentHandler {
 func (h appointmentHandler) List(ctx *fiber.Ctx) error {
 	resp, err := h.appointmentSvc.ListService(ctx.Context())
 	if err != nil {
-		return err
+		return ctx.Status(fiber.StatusBadRequest).JSON(map[string]interface{}{
+			"type":    "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+			"traceid": "-99",
+			"title":   "Bad Request",
+			"status":  fiber.StatusBadRequest,
+			"detail":  err,
+		})
+	}
+
+	if len(resp) == 0 {
+		return ctx.Status(fiber.StatusOK).JSON(map[string]interface{}{
+			"traceid": "traceid",
+			"title":   "No Data",
+			"status":  fiber.StatusOK,
+			"detail":  "Appointment data doesn't exists.",
+		})
 	}
 
 	return ctx.Status(fiber.StatusOK).JSON(map[string]interface{}{
@@ -75,7 +90,22 @@ func (h appointmentHandler) Get(ctx *fiber.Ctx) error {
 
 	resp, err := h.appointmentSvc.GetService(ctx.Context(), *req)
 	if err != nil {
-		return err
+		return ctx.Status(fiber.StatusBadRequest).JSON(map[string]interface{}{
+			"type":    "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+			"traceid": "-99",
+			"title":   "Bad Request",
+			"status":  fiber.StatusBadRequest,
+			"detail":  err,
+		})
+	}
+
+	if len(resp) == 0 {
+		return ctx.Status(fiber.StatusOK).JSON(map[string]interface{}{
+			"traceid": "traceid",
+			"title":   "No Data",
+			"status":  fiber.StatusOK,
+			"detail":  "Appointment data doesn't exists.",
+		})
 	}
 
 	return ctx.Status(fiber.StatusOK).JSON(map[string]interface{}{
@@ -107,7 +137,13 @@ func (h appointmentHandler) Create(ctx *fiber.Ctx) error {
 
 	err := h.appointmentSvc.CreateService(ctx.Context(), *req)
 	if err != nil {
-		return err
+		return ctx.Status(fiber.StatusBadRequest).JSON(map[string]interface{}{
+			"type":    "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+			"traceid": "-99",
+			"title":   "Bad Request",
+			"status":  fiber.StatusBadRequest,
+			"detail":  err,
+		})
 	}
 
 	return ctx.Status(fiber.StatusCreated).JSON(map[string]interface{}{
