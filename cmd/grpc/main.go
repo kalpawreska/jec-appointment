@@ -13,7 +13,7 @@ import (
 
 func main() {
 	//  Load Environtment
-	err := godotenv.Load("../../.env")
+	err := godotenv.Load(".env")
 	if err != nil {
 		log.Printf("Get Environtment Failed :%v", err)
 	}

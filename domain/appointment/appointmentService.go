@@ -4,6 +4,7 @@ package appointment
 //	Import library
 import (
 	"context"
+	"errors"
 	"log"
 )
 
@@ -46,13 +47,13 @@ func NewAppointmentServiceWithDB(p_oRepo Repository) appointmentService {
 func (asvc appointmentService) ListService(ctx context.Context) ([]AppointmentListResponse, error) {
 	list := make([]AppointmentListResponse, 0)
 
-	items, err := asvc.repo.ListRepo(ctx)
+	dataRepo, err := asvc.repo.ListRepo(ctx)
 	if err != nil {
 		return list, err
 	}
 
-	list = make([]AppointmentListResponse, len(items))
-	for i, item := range items {
+	list = make([]AppointmentListResponse, len(dataRepo))
+	for i, item := range dataRepo {
 		list[i].HealthcareId = item.HealthcareId
 		list[i].AppointmentNo = item.AppointmentNo
 		list[i].ParamedicId = item.ParamedicId
@@ -73,10 +74,17 @@ func (asvc appointmentService) ListService(ctx context.Context) ([]AppointmentLi
 func (asvc appointmentService) GetService(ctx context.Context, req AppointmentRequest) (res []Appointment, err error) {
 	model := req.ParseToEntity()
 
-	res, err = asvc.repo.GetRepo(ctx, model.HealthcareId, model.AppointmentNo)
+	dataRepo, err := asvc.repo.GetRepo(ctx, model.HealthcareId, model.AppointmentNo)
 	if err != nil {
 		return
 	}
+
+	if len(dataRepo) == 0 {
+		err = errors.New("data Appointment [" + model.AppointmentNo + "] with [" + model.HealthcareId + "] Not Found")
+		return
+	}
+
+	res = dataRepo
 	log.Printf("Get Appointment [%v] in [%v] successfully!\n", model.AppointmentNo, model.HealthcareId)
 
 	return
