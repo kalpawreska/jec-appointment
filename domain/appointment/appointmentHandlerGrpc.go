@@ -33,6 +33,10 @@ func NewAppointmentGrpcHandler(p_oGrpcService appointmentService) appointmentGrp
 func (gh *appointmentGrpcHandler) List(ctx context.Context, empty *emptypb.Empty) (res *AppointmentListProto, err error) {
 	dataResult, err := gh.appointmentSvc.ListService(ctx)
 	if len(dataResult) == 0 {
+		res = &AppointmentListProto{
+			Appointments: []*AppointmentProto{},
+		}
+
 		return
 	}
 
@@ -87,6 +91,8 @@ func (gh *appointmentGrpcHandler) Get(ctx context.Context, filter *AppointmentGe
 
 	dataResult, err := gh.appointmentSvc.GetService(ctx, getData)
 	if len(dataResult) == 0 {
+		res = &AppointmentProto{}
+
 		return
 	}
 
