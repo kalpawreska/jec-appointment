@@ -64,6 +64,7 @@ func (asvc appointmentService) ListService(ctx context.Context) ([]AppointmentLi
 		list[i].CreateAt = item.CreateAt
 		list[i].ScheduleSlotId = item.ScheduleSlotId
 	}
+	log.Printf("Get Appointment List successfully! Total rows: [%v]\n", len(list))
 
 	return list, nil
 }
@@ -76,6 +77,7 @@ func (asvc appointmentService) GetService(ctx context.Context, req AppointmentRe
 	if err != nil {
 		return
 	}
+	log.Printf("Get Appointment [%v] in [%v] successfully!\n", model.AppointmentNo, model.HealthcareId)
 
 	return
 }
@@ -88,8 +90,7 @@ func (asvc appointmentService) CreateService(ctx context.Context, req Appointmen
 	if err != nil {
 		return
 	}
-
-	log.Printf("Create Appointment [%v] successfully!\n", id)
+	log.Printf("Create Appointment [%v] in [%v] successfully!\n", id, model.HealthcareId)
 
 	return nil
 }
